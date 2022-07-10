@@ -1,6 +1,7 @@
 # CALM - Contrastive Alignment of Language and Music
 
 Project for the ``1st Sound of AI Hackathon``
+Group composed by *Alkis Koudounas*, *Lorenzo Vaiani*, *Moreno La Quatra*.
 
 ![CALM](images/logo.png?raw=true)
 
