@@ -12,7 +12,7 @@ import os
 import glob
 
 from transformers import CLIPVisionModel, AutoTokenizer, AutoModel
-from transformers import ViTFeatureExtractor, ViTModel
+from transformers import ViTFeatureExtractor, ViTForImageClassification
 
 import torch
 from tqdm import tqdm
@@ -388,22 +388,23 @@ def draw_camera(
     if captured_image is None:
         st.write("Waiting for capture...")
     else:
-        st.write("Got an image from the webcam:")
-        
-        st.image(captured_image)
 
-        st.write(type(captured_image))
-        st.write(captured_image)
-        st.write(captured_image.size)
+        captured_image = captured_image.convert("RGB")
     
-
         vit_feature_extractor = ViTFeatureExtractor.from_pretrained("google/vit-base-patch16-224-in21k")
-        vit_model = ViTModel.from_pretrained("/data1/mlaquatra/TSOAI_hack/ViT_ER/best_checkpoint", local_files_only=True)
-        inputs = vit_feature_extractor(images=captured_image, return_tensors="pt")
+        vit_model = ViTForImageClassification.from_pretrained("ViT_ER/best_checkpoint", local_files_only=True)
+        inputs = vit_feature_extractor(images=[captured_image], return_tensors="pt")
         outputs = vit_model(**inputs, output_hidden_states=True)
-        st.write(outputs)
+        #st.write(outputs)
+        emotions = ['Anger', 'Disgust', 'Fear', 'Happiness', 'Sadness', 'Surprise', 'Neutral']
+        mood = emotions[np.argmax(outputs.logits.detach().cpu().numpy())]
+        #st.write(mood)
 
-        st.write("You seem happy today! Here's a song for you that matches with how you feel!")
+        st.write(f"Your mood seems to be {mood.lower()} today! Here's a song for you that matches with how you feel!")
+        
+        song_paths = st.session_state.model.image_search(mood)
+        for song in song_paths:
+            st.audio(song + ".mp3", format="audio/mp3", start_time=0)
 
 
 ## Main 
