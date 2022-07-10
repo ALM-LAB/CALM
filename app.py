@@ -403,6 +403,8 @@ def draw_camera(
         outputs = vit_model(**inputs, output_hidden_states=True)
         st.write(outputs)
 
+        st.write("You seem happy today! Here's a song for you that matches with how you feel!")
+
 
 ## Main 
 selected = streamlit_menu(example=3)
