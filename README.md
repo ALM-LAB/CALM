@@ -23,10 +23,17 @@ People using music streaming services:
 
 ***
 
-## Our impact
+## What is our impact
 ``CALM`` will have a direct impact on:
 * People using streaming service. Explore new music everyday.
 * New releases that may be immediately included in search.
 * People who can search using multiple modalities.
 
+***
+
+## A small DEMO
+Here is a small overview of our web application.
+![App](images/app.png?raw=true)
+
+For a complete demo, you can have a look here!
 
