@@ -11,7 +11,7 @@ Group composed by *Alkis Koudounas*, *Lorenzo Vaiani*, *Moreno La Quatra*.
 ## What we propose
 Our idea is to align songs with their natural language description such that we can use text or voice to search music.
 
-![Architecture](images/basic_architecture.png?raw=true)
+![Architecture](images/basic_architecture_v2.png?raw=true)
 
 ***
 
