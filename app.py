@@ -256,7 +256,7 @@ def draw_text(
             vision_encoder = CLIPVisionModel.from_pretrained("calm_spectrogram/best_vision_model/", local_files_only=True)
             tokenizer = AutoTokenizer.from_pretrained(TEXT_MODEL)
             model = CLIPDemo(vision_encoder=vision_encoder, text_encoder=text_encoder, tokenizer=tokenizer)
-            model.compute_image_embeddings(glob.glob("spectrograms/*.jpeg"))
+            model.compute_image_embeddings(glob.glob("spectrograms/*.jpeg")[:10000])
             st.session_state["model"] = model
             #st.session_state['model'] = CLIPDemo(vision_encoder=vision_encoder, text_encoder=text_encoder, tokenizer=tokenizer)
             #st.session_state.model.compute_image_embeddings(glob.glob("/data1/mlaquatra/TSOAI_hack/data/spectrograms/*.jpeg")[:100])
@@ -291,6 +291,9 @@ def draw_text(
 
         song_paths = st.session_state.model.image_search(sentence)
         for song in song_paths:
+            song_name = df.loc[df['track_id'] == int(song[-6:])]['track_title'].to_list()[0]
+            artist_name = df.loc[df['track_id'] == int(song[-6:])]['artist_name'].to_list()[0]
+            st.write('**"'+song_name+'"**' + ' by ' + artist_name)
             st.audio(song + ".mp3", format="audio/mp3", start_time=0)
 
     if st.session_state.sentence == "Moreno La Quatra è un buffone":
@@ -311,7 +314,7 @@ def draw_audio(
             vision_encoder = CLIPVisionModel.from_pretrained("calm_spectrogram/best_vision_model/", local_files_only=True)
             tokenizer = AutoTokenizer.from_pretrained(TEXT_MODEL)
             model = CLIPDemo(vision_encoder=vision_encoder, text_encoder=text_encoder, tokenizer=tokenizer)
-            model.compute_image_embeddings(glob.glob("spectrograms/*.jpeg")[:5000])
+            model.compute_image_embeddings(glob.glob("spectrograms/*.jpeg")[:10000])
             st.session_state["model"] = model
             #st.session_state['model'] = CLIPDemo(vision_encoder=vision_encoder, text_encoder=text_encoder, tokenizer=tokenizer)
             #st.session_state.model.compute_image_embeddings(glob.glob("/data1/mlaquatra/TSOAI_hack/data/spectrograms/*.jpeg")[:100])
@@ -342,6 +345,7 @@ def draw_audio(
         recognition.start();
         """))
 
+
     result = streamlit_bokeh_events(
         stt_button,
         events="GET_TEXT",
@@ -353,10 +357,13 @@ def draw_audio(
     if result:
         if "GET_TEXT" in result:
             sentence = result.get("GET_TEXT")
-            st.write(sentence)
+            st.write('You asked for: "' + sentence + '"')
 
         song_paths = st.session_state.model.image_search(sentence)
         for song in song_paths:
+            song_name = df.loc[df['track_id'] == int(song[-6:])]['track_title'].to_list()[0]
+            artist_name = df.loc[df['track_id'] == int(song[-6:])]['artist_name'].to_list()[0]
+            st.write('**"'+song_name+'"**' + ' by ' + artist_name)
             st.audio(song + ".mp3", format="audio/mp3", start_time=0)
 
 ## Draw camera page
@@ -374,7 +381,7 @@ def draw_camera(
             vision_encoder = CLIPVisionModel.from_pretrained("calm_spectrogram/best_vision_model/", local_files_only=True)
             tokenizer = AutoTokenizer.from_pretrained(TEXT_MODEL)
             model = CLIPDemo(vision_encoder=vision_encoder, text_encoder=text_encoder, tokenizer=tokenizer)
-            model.compute_image_embeddings(glob.glob("spectrograms/*.jpeg")[:500])
+            model.compute_image_embeddings(glob.glob("spectrograms/*.jpeg")[:10000])
             st.session_state["model"] = model
             #st.session_state['model'] = CLIPDemo(vision_encoder=vision_encoder, text_encoder=text_encoder, tokenizer=tokenizer)
             #st.session_state.model.compute_image_embeddings(glob.glob("/data1/mlaquatra/TSOAI_hack/data/spectrograms/*.jpeg")[:100])
@@ -388,6 +395,13 @@ def draw_camera(
     if captured_image is None:
         st.write("Waiting for capture...")
     else:
+        # st.write("Got an image from the webcam:")
+        
+        # st.image(captured_image)
+
+        # st.write(type(captured_image))
+        # st.write(captured_image)
+        # st.write(captured_image.size)
 
         captured_image = captured_image.convert("RGB")
     
@@ -400,15 +414,19 @@ def draw_camera(
         mood = emotions[np.argmax(outputs.logits.detach().cpu().numpy())]
         #st.write(mood)
 
-        st.write(f"Your mood seems to be {mood.lower()} today! Here's a song for you that matches with how you feel!")
+        st.write(f"Your mood seems to be **{mood.lower()}** today! Here's a song for you that matches with how you feel!")
         
         song_paths = st.session_state.model.image_search(mood)
         for song in song_paths:
+            song_name = df.loc[df['track_id'] == int(song[-6:])]['track_title'].to_list()[0]
+            artist_name = df.loc[df['track_id'] == int(song[-6:])]['artist_name'].to_list()[0]
+            st.write('**"'+song_name+'"**' + ' by ' + artist_name)
             st.audio(song + ".mp3", format="audio/mp3", start_time=0)
 
 
 ## Main 
 selected = streamlit_menu(example=3)
+df = pd.read_csv('full_metadata.csv', index_col=False)
 
 if selected == "Text":
     # st.title(f"You have selected {selected}")
@@ -422,3 +440,4 @@ if selected == "Camera":
 
 # with st.sidebar:
 #     draw_sidebar("sidebar")
+
