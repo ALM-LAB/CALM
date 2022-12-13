@@ -37,6 +37,13 @@ Here is a small overview of our web application.
 
 For a complete demo, you can have a look here!
 
-[![Demo](https://img.youtube.com/vi/watch?v=ljVF8ZSoVY0/0.jpg)](https://www.youtube.com/watch?v=ljVF8ZSoVY0)
+[![Watch our Demo](images/demo.png)](https://www.youtube.com/watch?v=ljVF8ZSoVY0)
 
+***
 
+## 🤌🏻 About the project 
+CALM is a project created by [Alkis Koudounas](https://koudounasalkis.github.io), [Lorenzo Vaiani](https://twitter.com/VaianiLorenzo), and [Moreno La Quatra](https://www.mlaquatra.me). It is part of the ***The 1st Sound of AI Hackathon***.
+
+<p align="center">
+  <img src="images/ALM.png" alt="logo" width="300"/>
+</p>
